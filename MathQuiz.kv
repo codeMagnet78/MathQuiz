@@ -1,6 +1,15 @@
+<WrappedLabel@Label>:
+    # Do not set the height of the label    
+    size_hint_y: None
+    # Height should be texture size + half more of texture size
+    height: self.texture_size[1] + (self.texture_size[1]/2)
+    markup: True
+    
 <MathQuizRoot>:
     orientation: 'vertical'
-
+    screen_manager: screen_manager
+    math_screen: math_screen
+    
     ActionBar:
         ActionView:
             ActionPrevious:
@@ -11,5 +20,80 @@
                     text: 'Settings'
                     on_press: app.open_settings()
 
+    ScreenManager:
+        id: screen_manager
+        StartScreen:
+            name: 'start_screen'
+        AboutScreen:
+            id: about_screen
+            name: 'about_screen'
+        MathScreen:
+            id: math_screen    
+            name: 'math_screen'    
 
+<StartScreen@Screen>:
+    BoxLayout:
+        orientation: 'vertical'
+        padding: root.width * .02, root.height * .02
+        spacing: min(root.width, root.height) * .02
+
+        WrappedLabel:
+            text: '[b]Math Quiz[/b]'
+            font_size: min(root.height, root.width) / 10
+        Button:
+            text: 'Addition'
+            on_release: app.root.changeScreen(self.text.lower())
+        Button:
+            text: 'Substraction'
+            on_release: app.root.changeScreen(self.text.lower())
+        Button:
+            text: 'Multiplication'
+            on_release: app.root.changeScreen(self.text.lower())
+        Button:
+            text: 'Division'
+            on_release: app.root.changeScreen(self.text.lower())
+        Button:
+            text: 'Mix'
+            on_release: app.root.changeScreen(self.text.lower())
+        Button:
+            text: 'About this App'
+            on_release: app.root.changeScreen(self.text.lower())
+<MathScreen>:
+    question_text: question_text
+    answer_text: answer_text
+    BoxLayout:
+        orientation: 'vertical'
+        padding: root.width * .02, root.height * .02
+        spacing: 10
+        WrappedLabel:
+            id: question_text
+            text: 'some dummy text'
+            font_size: min(root.height, root.width) / 10
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: None
+            WrappedLabel:
+                id: answer_text
+                text: ''
+                font_size: min(root.height, root.width) /10
+            Button:
+                id: clear_btn
+                text: '[b]Clear[/b]'
+                markup: True
+                size_hint: .3, None
+                height: question_text.texture_size[1]
+                on_release: answer_text.text = ''
                         
+<AboutScreen@Screen>:
+    BoxLayout:
+        padding: root.width * .02, root.height * .02
+        Label:
+            text: app.getText()
+            halign: 'center'
+            markup: True
+            font_size: root.height / 20
+            #Text to be wrapped by Width and not by height
+            text_size: self.width, None
+            center_y: .5
+            # to click the link within the text
+            on_ref_press: app.on_ref_press(*args)
